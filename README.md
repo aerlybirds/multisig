@@ -1,4 +1,4 @@
-# TON Multisig UI
+# Ærly Birds Multisig UI
 
 ```
 npm run serve
