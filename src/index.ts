@@ -284,13 +284,13 @@ const renderCurrentMultisigInfo = (): void => {
 
   const formatOrder = (lastOrder: LastOrder): string => {
     if (lastOrder.errorMessage) {
-      if (lastOrder.errorMessage.startsWith("Contract not active")) return ``;
-      if (lastOrder.errorMessage.startsWith("Failed")) {
+      if (lastOrder.errorMessage.startsWith("Контракт не активен")) return ``;
+      if (lastOrder.errorMessage.startsWith("Ошибка")) {
         return `<div class="multisig_lastOrder" order-id="${
           lastOrder.order.id
         }" order-address="${addressToString(
           lastOrder.order.address
-        )}"><span class="orderListItem_title">Failed Order #${
+        )}"><span class="orderListItem_title">Ошибка в заявке #${
           lastOrder.order.id
         }</span> — Execution error</div>`;
       }
@@ -322,7 +322,7 @@ const renderCurrentMultisigInfo = (): void => {
           const mask = 1 << myIndex;
           const isSigned = lastOrder.orderInfo.approvalsMask & mask;
 
-          text += isSigned ? " — You approved" : ` — You haven't approved yet`;
+          text += isSigned ? " — Вы одобрили" : ` — Вы отклонили заявку`;
         }
       }
 

@@ -338,7 +338,7 @@ export const checkMultisigOrder = async (
 
   const actionsKeys = actions.keys();
   for (let key of actionsKeys) {
-    let actionString = `<div class="label">Заявка №${key}:</div>`;
+    let actionString = `<div class="label">Действие №${key}:</div>`;
 
     const action = actions.get(key);
     const slice = action!.beginParse();
