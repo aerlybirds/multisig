@@ -10,6 +10,9 @@ jobs:
       - name: install
         run: |
           npm install
+      - name: build
+        run: |
+          npm run build
       - name: serve
         run: |
           npm run serve
