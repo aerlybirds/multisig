@@ -50,13 +50,13 @@ const toggle = (element: HTMLElement, isVisible: boolean): void => {
   element.style.display = isVisible ? "flex" : "none";
 };
 
-const YOU_BADGE: string = ` <div class="badge">It's you</div>`;
+const YOU_BADGE: string = ` <div class="badge">Это вы</div>`;
 
 // URL STATE
 
 const clearUrlState = (): void => {
   if (window.history.state !== "") {
-    window.history.pushState("", "TON Multisig", "#");
+    window.history.pushState("", "Мультикошелек", "#");
   }
 };
 
@@ -271,13 +271,13 @@ const renderCurrentMultisigInfo = (): void => {
   const formatOrderType = (lastOrder: LastOrder): string => {
     switch (lastOrder.type) {
       case "new":
-        return "New order";
+        return "Новая заяввка";
       case "execute":
         return "Execute order";
       case "pending":
-        return "Pending order";
+        return "Ожидаемая заявка";
       case "executed":
-        return "Executed order";
+        return "Выполненная заявка";
     }
     throw new Error("unknown order type " + lastOrder.type);
   };
@@ -298,7 +298,7 @@ const renderCurrentMultisigInfo = (): void => {
         lastOrder.order.id
       }" order-address="${addressToString(
         lastOrder.order.address
-      )}"><span class="orderListItem_title">Invalid Order #${
+      )}"><span class="orderListItem_title">Недействительная заявка #${
         lastOrder.order.id
       }</span> — ${lastOrder.errorMessage}</div>`;
     } else {
@@ -306,7 +306,7 @@ const renderCurrentMultisigInfo = (): void => {
         ? new Date().getTime() > lastOrder.orderInfo.expiresAt.getTime()
         : false;
       const actionText = isExpired
-        ? "Expired order "
+        ? "Истекший срок заявки "
         : formatOrderType(lastOrder);
       let text = `<span class="orderListItem_title">${actionText} #${lastOrder.order.id}</span>`;
 
@@ -341,12 +341,12 @@ const renderCurrentMultisigInfo = (): void => {
   for (const lastOrder of lastOrders) {
     if (lastOrder.type == "executed") {
       if (!wasExecuted) {
-        lastOrdersHTML += '<div class="label">Old orders:</div>';
+        lastOrdersHTML += '<div class="label">Старые заявки:</div>';
         wasExecuted = true;
       }
     } else if (lastOrder.type === "pending") {
       if (!wasPending) {
-        lastOrdersHTML += '<div class="label">Pending orders:</div>';
+        lastOrdersHTML += '<div class="label">Ожидаемые заявки:</div>';
         wasPending = true;
       }
     }
@@ -488,10 +488,10 @@ const renderCurrentOrderInfo = (): void => {
   const isExpired = new Date().getTime() > expiresAt.getTime();
 
   $("#order_tonBalance").innerText = fromNano(tonBalance) + " TON";
-  $("#order_executed").innerText = isExecuted ? "Yes" : "Not yet";
+  $("#order_executed").innerText = isExecuted ? "Да" : "Нет";
   $("#order_approvals").innerText = approvalsNum + "/" + threshold;
   $("#order_expiresAt").innerText =
-    (isExpired ? "❌ EXPIRED - " : "") + expiresAt.toString();
+    (isExpired ? "❌ ИСТЕКЛО - " : "") + expiresAt.toString();
 
   let isApprovedByMe = false;
   let signersHTML = "";
@@ -515,11 +515,11 @@ const renderCurrentOrderInfo = (): void => {
   }
 
   if (actions.length === 0) {
-    $("#order_actionsTitle").innerText = "No actions";
+    $("#order_actionsTitle").innerText = "Нет заявок";
   } else if (actions.length === 1) {
-    $("#order_actionsTitle").innerText = "One action:";
+    $("#order_actionsTitle").innerText = "Заявка:";
   } else {
-    $("#order_actionsTitle").innerText = actions.length + " actions:";
+    $("#order_actionsTitle").innerText = actions.length + " действия:";
   }
   $("#order_actions").innerHTML = actionsHTML;
 
@@ -573,7 +573,7 @@ const updateOrder = async (
 
     // Render error if still relevant
     if (currentOrderId !== orderId) return;
-    if (isFirstTime || !e?.message?.startsWith("Timeout")) {
+    if (isFirstTime || !e?.message?.startsWith("Время истекло")) {
       toggle($("#order_content"), false);
       toggle($("#order_error"), true);
       $("#order_error").innerText = e.message;
@@ -595,7 +595,8 @@ const setOrderId = async (
   newOrderId: bigint,
   newOrderAddress?: string
 ): Promise<void> => {
-  if (!currentMultisigInfo) throw new Error("setOrderId: no multisig info");
+  if (!currentMultisigInfo)
+    throw new Error("setOrderId: нет информации о мультикошельке");
 
   showScreen("loadingScreen");
   clearOrder();
@@ -648,7 +649,7 @@ $("#order_approveButton").addEventListener("click", async () => {
   );
 
   if (mySignerIndex == -1) {
-    alert("You are not signer");
+    alert("Вы не можете подтверждать");
     return;
   }
 
@@ -879,7 +880,7 @@ const checkExistingOrderId = async (
     if (result.status === "uninit") {
       return { value: true };
     } else {
-      return { error: `Order ${orderId} already exists` };
+      return { error: `Заявка ${orderId} уже существует` };
     }
   } catch (e) {
     console.error(e);
@@ -889,14 +890,14 @@ const checkExistingOrderId = async (
 
 const orderTypes: OrderType[] = [
   {
-    name: "Transfer TON",
+    name: "Отправить TON",
     fields: {
       amount: {
-        name: "TON Amount",
+        name: "Количество TON",
         type: "TON",
       },
       toAddress: {
-        name: "Destination Address",
+        name: "Адрес получения",
         type: "Address",
       },
     },
@@ -910,18 +911,18 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Transfer Jetton",
+    name: "Отправить жетоны",
     fields: {
       jettonMinterAddress: {
-        name: "Jetton Minter Address",
+        name: "Адрес контракта жетона",
         type: "Address",
       },
       amount: {
-        name: "Jetton Amount (in units)",
+        name: "Количество жетонов",
         type: "Jetton",
       },
       toAddress: {
-        name: "To Address",
+        name: "На адрес",
         type: "Address",
       },
     },
@@ -956,18 +957,18 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Mint Jetton",
+    name: "Выпустить жетоны",
     fields: {
       jettonMinterAddress: {
-        name: "Jetton Minter Address",
+        name: "Адрес контракта жетона",
         type: "Address",
       },
       amount: {
-        name: "Jetton Amount (in units)",
+        name: "Количество жетонов",
         type: "Jetton",
       },
       toAddress: {
-        name: "To Address",
+        name: "На адрес",
         type: "Address",
       },
     },
@@ -990,14 +991,14 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Change Jetton Admin",
+    name: "Сменить администратора жетона",
     fields: {
       jettonMinterAddress: {
-        name: "Jetton Minter Address",
+        name: "Адрес контракта жетона",
         type: "Address",
       },
       newAdminAddress: {
-        name: "New Admin Address",
+        name: "Новый адрес администратора",
         type: "Address",
       },
     },
@@ -1012,10 +1013,10 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Claim Jetton Admin",
+    name: "Запросить адрес администратора",
     fields: {
       jettonMinterAddress: {
-        name: "Jetton Minter Address",
+        name: "Адрес контракта жетона",
         type: "Address",
       },
     },
@@ -1030,14 +1031,14 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Top-up Jetton Minter",
+    name: "Пополнить контракт жетона",
     fields: {
       jettonMinterAddress: {
-        name: "Jetton Minter Address",
+        name: "Адрес контракта жетона",
         type: "Address",
       },
       amount: {
-        name: "TON Amount",
+        name: "Количество TON",
         type: "TON",
       },
     },
@@ -1051,14 +1052,14 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Change Jetton Metadata URL",
+    name: "Сменить метаданные жетона",
     fields: {
       jettonMinterAddress: {
-        name: "Jetton Minter Address",
+        name: "Адрес контракта жетона",
         type: "Address",
       },
       newMetadataUrl: {
-        name: "New Metadata URL",
+        name: "Новая URL ссылка с метаданными",
         type: "URL",
       },
     },
@@ -1075,18 +1076,18 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Force Burn Jetton",
+    name: "Принудительно сжечь жетоны",
     fields: {
       jettonMinterAddress: {
-        name: "Jetton Minter Address",
+        name: "Адрес контракта жетона",
         type: "Address",
       },
       amount: {
-        name: "Jetton Amount (in units)",
+        name: "Количество жетонов",
         type: "Jetton",
       },
       fromAddress: {
-        name: "User Address",
+        name: "Адрес пользователя",
         type: "Address",
       },
     },
@@ -1106,22 +1107,22 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Force Transfer Jetton",
+    name: "Принудительно отправить жетоны",
     fields: {
       jettonMinterAddress: {
-        name: "Jetton Minter Address",
+        name: "Адрес контракта жетона",
         type: "Address",
       },
       amount: {
-        name: "Jetton Amount (in units)",
+        name: "Количество жетонов",
         type: "Jetton",
       },
       fromAddress: {
-        name: "From Address",
+        name: "С адреса",
         type: "Address",
       },
       toAddress: {
-        name: "To Address",
+        name: "На адрес",
         type: "Address",
       },
     },
@@ -1145,18 +1146,18 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Set status for Jetton Wallet",
+    name: "Сменить состояние контракта жетона",
     fields: {
       jettonMinterAddress: {
-        name: "Jetton Minter Address",
+        name: "Адрес контракта жетона",
         type: "Address",
       },
       userAddress: {
-        name: "User Address",
+        name: "Адрес пользователя",
         type: "Address",
       },
       newStatus: {
-        name: `New Status (${LOCK_TYPES.join(", ")})`,
+        name: `Новое состояние (Разблокировать, исх., вход., полная блокировка)`,
         type: "Status",
       },
     },
@@ -1286,12 +1287,12 @@ const setNewOrderDisabled = (isDisabled: boolean) => {
 const setNewOrderMode = (mode: "fill" | "confirm") => {
   if (mode == "fill") {
     setNewOrderDisabled(false);
-    $("#newOrder_createButton").innerHTML = "Create";
-    $("#newOrder_backButton").innerHTML = "Back";
+    $("#newOrder_createButton").innerHTML = "Создать";
+    $("#newOrder_backButton").innerHTML = "Назад";
   } else {
     setNewOrderDisabled(true);
-    $("#newOrder_createButton").innerHTML = "Send Transaction";
-    $("#newOrder_backButton").innerHTML = "Cancel";
+    $("#newOrder_createButton").innerHTML = "Отправить транзакцию";
+    $("#newOrder_backButton").innerHTML = "Отменить";
   }
   newOrderMode = mode;
 };
@@ -1676,17 +1677,17 @@ $("#newMultisig_backButton").addEventListener("click", () => {
 const updateNewMultisigCreateButtonTitle = () => {
   $("#newMultisig_createButton").innerText =
     newMultisigStatus === "confirm"
-      ? "Confirm"
+      ? "Подтвердить"
       : newMultisigMode === "update"
-      ? "Update"
-      : "Create";
+      ? "Обновить"
+      : "Создать";
 };
 
 const updateNewMultisigCreateButton = (isLoading: boolean): void => {
   ($("#newMultisig_createButton") as HTMLButtonElement).disabled = isLoading;
   if (isLoading) {
     ($("#newMultisig_createButton") as HTMLButtonElement).innerText =
-      "Checking..";
+      "Проверка..";
   } else {
     updateNewMultisigCreateButtonTitle();
   }
@@ -1695,7 +1696,7 @@ const updateNewMultisigCreateButton = (isLoading: boolean): void => {
 
 $("#newMultisig_createButton").addEventListener("click", async () => {
   if (!myAddress) {
-    alert("Please connect wallet");
+    alert("Пожалуйста подключите кошелек");
     return;
   }
 
@@ -1734,7 +1735,7 @@ $("#newMultisig_createButton").addEventListener("click", async () => {
     threshold <= 0 ||
     threshold > newMultisigInfo.signersCount
   ) {
-    alert("Threshold count: not valid number");
+    alert("Порог голосования: недопустимое число");
     return;
   }
 
