@@ -268,7 +268,7 @@ export const checkMultisigOrder = async (
         "Отправка не поддерживается"
       );
       const toAddress = await formatAddressAndUrl(parsed.toAddress, isTestnet);
-      return `Отправка ${parsed.jettonAmount} жетонов с адреса мультикошелька на адрес польщователя ${toAddress};`;
+      return `Отправка ${parsed.jettonAmount} жетонов с адреса мультикошелька на адрес пользователя ${toAddress};`;
     } catch (e) {}
 
     try {
@@ -310,9 +310,9 @@ export const checkMultisigOrder = async (
       );
       return `Принудительная отправка ${
         parsed.action.jettonAmount
-      } с адреса польщзвателя ${fromAddress} на адрес ${toAddress}; ${fromNano(
+      } с адреса пользователя ${fromAddress} на адрес ${toAddress}; ${fromNano(
         parsed.tonAmount
-      )} TON for gas`;
+      )} TON за оплату комиссии`;
     } catch (e) {}
 
     try {

@@ -763,7 +763,7 @@ const validateValue = (
       return parseAmount(value, 9);
 
     case "Jetton":
-      return parseAmount(value, 6);
+      return parseBigInt(value, 6);
 
     case "Address":
       if (!Address.isFriendly(value)) {
