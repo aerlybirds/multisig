@@ -310,7 +310,7 @@ export const checkMultisigOrder = async (
       );
       return `Принудительная отправка ${
         parsed.action.jettonAmount
-      } с адреса польщователя ${fromAddress} на адрес ${toAddress}; ${fromNano(
+      } с адреса польщзвателя ${fromAddress} на адрес ${toAddress}; ${fromNano(
         parsed.tonAmount
       )} TON for gas`;
     } catch (e) {}
@@ -351,22 +351,22 @@ export const checkMultisigOrder = async (
       let allBalance = false;
 
       if (sendMode & 1) {
-        sendModeString.push("Pays fees separately");
+        sendModeString.push("Комиссии оплачиваются отдельно");
       }
       if (sendMode & 2) {
-        sendModeString.push("Ignore sending errors");
+        sendModeString.push("Игнорировать ошибки отправки");
       }
       if (sendMode & 128) {
         allBalance = true;
-        sendModeString.push("CARRY ALL BALANCE");
+        sendModeString.push("Сохранить весь баланс");
       }
       if (sendMode & 64) {
         sendModeString.push(
-          "Carry all the remaining value of the inbound message"
+          "Перенесите все оставшееся значение входящего сообщения"
         );
       }
       if (sendMode & 32) {
-        sendModeString.push("DESTROY ACCOUNT");
+        sendModeString.push("УНИЧТОЖИТЬ УЧЕТНУЮ ЗАПИСЬ");
       }
 
       const actionBody = slice.loadRef();
@@ -377,14 +377,16 @@ export const checkMultisigOrder = async (
       const info: CommonMessageInfoRelaxedInternal = messageRelaxed.info as any;
 
       const destAddress = await formatAddressAndUrl(info.dest, isTestnet);
-      actionString += `<div>Send ${
-        allBalance ? "ALL BALANCE" : fromNano(info.value.coins)
-      } TON to ${destAddress}</div>`;
+      actionString += `<div>Отправить ${
+        allBalance ? "ВЕСЬ БАЛАНС" : fromNano(info.value.coins)
+      } TON на адрес ${destAddress}</div>`;
       actionString += `<div>${await parseActionBody(
         messageRelaxed.body
       )}</div>`;
       if (sendMode) {
-        actionString += `<div>Send mode: ${sendModeString.join(", ")}.</div>`;
+        actionString += `<div>Метод отправки: ${sendModeString.join(
+          ", "
+        )}.</div>`;
       }
     } else if (actionOp === 0x1d0cfbd3) {
       // update_multisig_params
@@ -395,9 +397,9 @@ export const checkMultisigOrder = async (
         : [];
       endParse(slice);
 
-      assert(newSigners.length > 0, "Invalid new signers");
-      assert(newThreshold > 0, "Invalid new threshold");
-      assert(newThreshold <= newSigners.length, "Invalid new threshold");
+      assert(newSigners.length > 0, "Неправильный адрес подписывающего");
+      assert(newThreshold > 0, "Неправильный новый порог");
+      assert(newThreshold <= newSigners.length, "Неправильный порог");
 
       actionString += `<div>Обновить параметры мультикошелька</div>`;
       actionString += `<div>Новый порог подписей : ${newThreshold.toString()}</div>`;

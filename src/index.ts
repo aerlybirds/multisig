@@ -728,12 +728,12 @@ const validateValue = (
       const units = BigInt(inputAmount);
 
       if (units <= 0) {
-        return makeError("Enter positive amount");
+        return makeError("Введите положительное число");
       }
 
       return makeValue(units);
     } catch (e: any) {
-      return makeError("Invalid amount");
+      return makeError("Неправильная сумма");
     }
   };
 
@@ -745,17 +745,17 @@ const validateValue = (
       const units = toUnits(inputAmount, decimals);
 
       if (units <= 0) {
-        return makeError("Enter positive amount");
+        return makeError("Введите положительное число");
       }
 
       return makeValue(units);
     } catch (e: any) {
-      return makeError("Invalid amount");
+      return makeError("Неправильная сумма");
     }
   };
 
   if (value === null || value === undefined || value === "") {
-    return makeError(`Empty`);
+    return makeError(`Пусто`);
   }
 
   switch (fieldType) {
@@ -763,21 +763,21 @@ const validateValue = (
       return parseAmount(value, 9);
 
     case "Jetton":
-      return parseBigInt(value);
+      return parseAmount(value, 6);
 
     case "Address":
       if (!Address.isFriendly(value)) {
-        return makeError("Invalid Address");
+        return makeError("Неправильный адрес");
       }
       const address = Address.parseFriendly(value);
       if (address.isTestOnly && !IS_TESTNET) {
-        return makeError("Please enter mainnet address");
+        return makeError("Пожалуйста, введите адрес из основной сети");
       }
       return makeValue(address);
 
     case "URL":
       if (!value.startsWith("https://")) {
-        return makeError("Invalid URL");
+        return makeError("Неправильный URL адрес");
       }
       return makeValue(value);
 
@@ -786,7 +786,8 @@ const validateValue = (
         return makeValue(value);
       } else {
         return makeError(
-          "Invalid status. Please use: " + LOCK_TYPES.join(", ")
+          "Неправильный статус. Пожалуйста, используйте: " +
+            LOCK_TYPES.join(", ")
         );
       }
   }
@@ -827,7 +828,9 @@ const checkJettonMinterAdmin = async (values: {
     );
 
     if (!multisigInfo.address.address.equals(jettonMinterInfo.adminAddress)) {
-      return { error: "Multisig is not admin of this jetton" };
+      return {
+        error: "Мультикошелек не является администратором этого жетона",
+      };
     }
 
     return { value: jettonMinterInfo };
@@ -853,7 +856,9 @@ const checkJettonMinterNextAdmin = async (values: {
       !jettonMinterInfo.nextAdminAddress ||
       !multisigInfo.address.address.equals(jettonMinterInfo.nextAdminAddress)
     ) {
-      return { error: "Multisig is not next-admin of this jetton" };
+      return {
+        error: "Мультикошелек не является администратором этого жетона",
+      };
     }
 
     return { value: jettonMinterInfo };
