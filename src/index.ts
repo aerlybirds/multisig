@@ -763,15 +763,15 @@ const validateValue = (
       return parseAmount(value, 9);
 
     case "Jetton":
-      return parseBigInt(value, 6);
+      return parseAmount(value, 6);
 
     case "Address":
       if (!Address.isFriendly(value)) {
-        return makeError("Неправильный адрес");
+        return makeError("Неправильный кошелек");
       }
       const address = Address.parseFriendly(value);
       if (address.isTestOnly && !IS_TESTNET) {
-        return makeError("Пожалуйста, введите адрес из основной сети");
+        return makeError("Пожалуйста, введите адрес кошелька из основной сети");
       }
       return makeValue(address);
 
@@ -902,7 +902,7 @@ const orderTypes: OrderType[] = [
         type: "TON",
       },
       toAddress: {
-        name: "Адрес получения",
+        name: "Получатель",
         type: "Address",
       },
     },
@@ -927,7 +927,7 @@ const orderTypes: OrderType[] = [
         type: "Jetton",
       },
       toAddress: {
-        name: "На адрес",
+        name: "Получатель",
         type: "Address",
       },
     },
@@ -973,7 +973,7 @@ const orderTypes: OrderType[] = [
         type: "Jetton",
       },
       toAddress: {
-        name: "На адрес",
+        name: "Получатель",
         type: "Address",
       },
     },
@@ -1003,7 +1003,7 @@ const orderTypes: OrderType[] = [
         type: "Address",
       },
       newAdminAddress: {
-        name: "Новый адрес администратора",
+        name: "Новый кошелек администратора",
         type: "Address",
       },
     },
@@ -1018,7 +1018,7 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Запросить адрес администратора",
+    name: "Запросить кошелек администратора",
     fields: {
       jettonMinterAddress: {
         name: "Адрес контракта жетона",
@@ -1092,7 +1092,7 @@ const orderTypes: OrderType[] = [
         type: "Jetton",
       },
       fromAddress: {
-        name: "Адрес пользователя",
+        name: "Кошелек пользователя",
         type: "Address",
       },
     },
@@ -1127,7 +1127,7 @@ const orderTypes: OrderType[] = [
         type: "Address",
       },
       toAddress: {
-        name: "На адрес",
+        name: "Получатель",
         type: "Address",
       },
     },
@@ -1158,7 +1158,7 @@ const orderTypes: OrderType[] = [
         type: "Address",
       },
       userAddress: {
-        name: "Адрес пользователя",
+        name: "Кошелек пользователя",
         type: "Address",
       },
       newStatus: {

@@ -127,7 +127,7 @@ export const checkMultisigOrder = async (
         multisigInfo.signers.map((a) => a.address),
         parsedData.signers
       ),
-      "Количество подтверждающих не совпадает с количествои в заявке"
+      "Количество подтверждающих не совпадает с количеством в заявке"
     );
   }
 
@@ -242,19 +242,19 @@ export const checkMultisigOrder = async (
         parsed.newAdminAddress,
         isTestnet
       );
-      return `Смена адреса администратора на ${newAdminAddress}`;
+      return `Сменить кошелек администратора на ${newAdminAddress}`;
     } catch (e) {}
 
     try {
       const slice = cell.beginParse();
       const parsed = JettonMinter.parseClaimAdmin(slice);
-      return `Запросить адрес администратора`;
+      return `Запросить кошелек администратора`;
     } catch (e) {}
 
     try {
       const slice = cell.beginParse();
       const parsed = JettonMinter.parseChangeContent(slice);
-      return `Смена URL метаданных на "${sanitizeHTML(parsed.newMetadataUrl)}"`;
+      return `Сменить метаданные на "${sanitizeHTML(parsed.newMetadataUrl)}"`;
     } catch (e) {}
 
     try {
@@ -310,7 +310,7 @@ export const checkMultisigOrder = async (
       );
       return `Принудительная отправка ${
         parsed.action.jettonAmount
-      } с адреса пользователя ${fromAddress} на адрес ${toAddress}; ${fromNano(
+      } с кошелька пользователя ${fromAddress} на кошелек ${toAddress}; ${fromNano(
         parsed.tonAmount
       )} TON за оплату комиссии`;
     } catch (e) {}
@@ -326,7 +326,7 @@ export const checkMultisigOrder = async (
       );
       return `Принудительное сжигание ${
         parsed.action.jettonAmount
-      } жетонов с адреса пользователя ${userAddress}; ${fromNano(
+      } жетонов с кошелька пользователя ${userAddress}; ${fromNano(
         parsed.tonAmount
       )} TON for gas`;
     } catch (e) {}
@@ -397,7 +397,7 @@ export const checkMultisigOrder = async (
         : [];
       endParse(slice);
 
-      assert(newSigners.length > 0, "Неправильный адрес подписывающего");
+      assert(newSigners.length > 0, "Неправильный кошелек подписывающего");
       assert(newThreshold > 0, "Неправильный новый порог");
       assert(newThreshold <= newSigners.length, "Неправильный порог");
 
