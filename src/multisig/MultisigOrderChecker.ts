@@ -78,7 +78,7 @@ export const checkMultisigOrder = async (
   checkNumber(parsedData.threshold);
   assert(
     parsedData.threshold > 0,
-    "Порог голосующих не является положительным"
+    "Число подтверждающих не больше нуляЧисло подтверждающих не больше нуля"
   );
   assert(
     parsedData.threshold <= parsedData.signers.length,
@@ -198,7 +198,7 @@ export const checkMultisigOrder = async (
     try {
       const slice = cell.beginParse();
       if (slice.remainingBits === 0 && slice.remainingRefs == 0) {
-        return "Отправьте TON с помощью мультикошелька без комментариев";
+        return "Отправьте TON с помощью мультикошелька без комментария";
       }
     } catch (e) {}
 
@@ -219,7 +219,7 @@ export const checkMultisigOrder = async (
       assert(
         parsed.internalMessage.forwardPayload.remainingBits === 0 &&
           parsed.internalMessage.forwardPayload.remainingRefs === 0,
-        "Полезная нагрузка выпуска не поддерживается"
+        "Полезная нагрузка не поддерживается"
       );
       const toAddress = await formatAddressAndUrl(parsed.toAddress, isTestnet);
       return `Выпустить ${
@@ -242,13 +242,13 @@ export const checkMultisigOrder = async (
         parsed.newAdminAddress,
         isTestnet
       );
-      return `Сменить кошелек администратора на ${newAdminAddress}`;
+      return `Сменить адрес администратора на ${newAdminAddress}`;
     } catch (e) {}
 
     try {
       const slice = cell.beginParse();
       const parsed = JettonMinter.parseClaimAdmin(slice);
-      return `Запросить кошелек администратора`;
+      return `Запросить адрес администратора`;
     } catch (e) {}
 
     try {
@@ -268,7 +268,7 @@ export const checkMultisigOrder = async (
         "Отправка не поддерживается"
       );
       const toAddress = await formatAddressAndUrl(parsed.toAddress, isTestnet);
-      return `Отправка ${parsed.jettonAmount} жетонов с адреса мультикошелька на адрес пользователя ${toAddress};`;
+      return `Отправить ${parsed.jettonAmount} жетонов с адреса мультикошелька на адрес пользователя ${toAddress};`;
     } catch (e) {}
 
     try {
@@ -282,7 +282,7 @@ export const checkMultisigOrder = async (
         isTestnet
       );
       const lockType = intToLockType(parsed.action.newStatus);
-      return `Блокировка жетонов пользователя ${userAddress}. Смена состояния "${lockType}" - "${lockTypeToDescription(
+      return `Блокировать жетоны пользователя ${userAddress}. Смена состояния "${lockType}" - "${lockTypeToDescription(
         lockType
       )}"; ${fromNano(parsed.tonAmount)} TON для оплаты газа`;
     } catch (e) {}
@@ -328,7 +328,7 @@ export const checkMultisigOrder = async (
         parsed.action.jettonAmount
       } жетонов с кошелька пользователя ${userAddress}; ${fromNano(
         parsed.tonAmount
-      )} TON for gas`;
+      )} TON для оплаты комиссии`;
     } catch (e) {}
 
     throw new Error("Неподдерживаемое действие");
@@ -351,22 +351,20 @@ export const checkMultisigOrder = async (
       let allBalance = false;
 
       if (sendMode & 1) {
-        sendModeString.push("Комиссии оплачиваются отдельно");
+        sendModeString.push("Комиссия оплачиваются отдельно");
       }
       if (sendMode & 2) {
-        sendModeString.push("Игнорировать ошибки отправки");
+        sendModeString.push("Игнорировать ошибки");
       }
       if (sendMode & 128) {
         allBalance = true;
-        sendModeString.push("Сохранить весь баланс");
+        sendModeString.push("ПЕРЕНЕСТИ ВЕСЬ БАЛАНС");
       }
       if (sendMode & 64) {
-        sendModeString.push(
-          "Перенесите все оставшееся значение входящего сообщения"
-        );
+        sendModeString.push("Перенести весь остаток входящего сообщения");
       }
       if (sendMode & 32) {
-        sendModeString.push("УНИЧТОЖИТЬ УЧЕТНУЮ ЗАПИСЬ");
+        sendModeString.push("УНИЧТОЖИТЬ АККАУНТ");
       }
 
       const actionBody = slice.loadRef();
@@ -398,8 +396,8 @@ export const checkMultisigOrder = async (
       endParse(slice);
 
       assert(newSigners.length > 0, "Неправильный кошелек подписывающего");
-      assert(newThreshold > 0, "Неправильный новый порог");
-      assert(newThreshold <= newSigners.length, "Неправильный порог");
+      assert(newThreshold > 0, "Неверное значение порога голосования");
+      assert(newThreshold <= newSigners.length, "Неверный порог");
 
       actionString += `<div>Обновить параметры мультикошелька</div>`;
       actionString += `<div>Новый порог подписей : ${newThreshold.toString()}</div>`;

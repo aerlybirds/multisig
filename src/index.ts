@@ -66,7 +66,7 @@ const pushUrlState = (multisigAddress: string, orderId?: bigint): void => {
     url += "/" + orderId;
   }
   if (window.history.state !== url) {
-    window.history.pushState(url, "TON Multisig - " + url, "#" + url);
+    window.history.pushState(url, "Мультикошелек - " + url, "#" + url);
   }
 };
 
@@ -145,7 +145,8 @@ const showScreen = (name: ScreenType): void => {
 let myAddress: Address | null;
 
 const tonConnectUI = new TonConnectUI({
-  manifestUrl: "https://multisig.ton.org/tonconnect-manifest.json",
+  manifestUrl:
+    "https://raw.githubusercontent.com/aerlybirds/multisig/main/tonconnect-manifest.json",
   buttonRootId: "tonConnectButton",
 });
 
@@ -263,7 +264,7 @@ const renderCurrentMultisigInfo = (): void => {
     }
     $("#multisig_proposersList").innerHTML = proposersHTML;
   } else {
-    $("#multisig_proposersList").innerHTML = "No proposers";
+    $("#multisig_proposersList").innerHTML = "Нет предлагающих";
   }
 
   // Render Last Orders
@@ -271,13 +272,13 @@ const renderCurrentMultisigInfo = (): void => {
   const formatOrderType = (lastOrder: LastOrder): string => {
     switch (lastOrder.type) {
       case "new":
-        return "Новая заяввка";
+        return "Новая заявка";
       case "execute":
-        return "Execute order";
+        return "Выполнить заявку";
       case "pending":
-        return "Ожидаемая заявка";
+        return "Ожидаем заявкы";
       case "executed":
-        return "Выполненная заявка";
+        return "Заявка выполнена";
     }
     throw new Error("unknown order type " + lastOrder.type);
   };
@@ -290,9 +291,9 @@ const renderCurrentMultisigInfo = (): void => {
           lastOrder.order.id
         }" order-address="${addressToString(
           lastOrder.order.address
-        )}"><span class="orderListItem_title">Ошибка в заявке #${
+        )}"><span class="orderListItem_title">Ошибка в заявке №${
           lastOrder.order.id
-        }</span> — Execution error</div>`;
+        }</span> — Ошибка выполнения</div>`;
       }
       return `<div class="multisig_lastOrder" order-id="${
         lastOrder.order.id
@@ -308,7 +309,7 @@ const renderCurrentMultisigInfo = (): void => {
       const actionText = isExpired
         ? "Истекший срок заявки "
         : formatOrderType(lastOrder);
-      let text = `<span class="orderListItem_title">${actionText} #${lastOrder.order.id}</span>`;
+      let text = `<span class="orderListItem_title">${actionText} №${lastOrder.order.id}</span>`;
 
       if (lastOrder.type === "pending" && !isExpired) {
         text += ` — ${lastOrder.orderInfo.approvalsNum}/${lastOrder.orderInfo.threshold}`;
@@ -640,7 +641,7 @@ $("#order_approveButton").addEventListener("click", async () => {
   const orderInfo = currentOrderInfo;
 
   if (!myAddress) {
-    alert("Please connect wallet");
+    alert("Подключите кошелек");
     return;
   }
 
@@ -767,7 +768,7 @@ const validateValue = (
 
     case "Address":
       if (!Address.isFriendly(value)) {
-        return makeError("Неправильный кошелек");
+        return makeError("Неправильный адрес");
       }
       const address = Address.parseFriendly(value);
       if (address.isTestOnly && !IS_TESTNET) {
@@ -836,7 +837,7 @@ const checkJettonMinterAdmin = async (values: {
     return { value: jettonMinterInfo };
   } catch (e: any) {
     console.error(e);
-    return { error: "Jetton-minter check error" };
+    return { error: "Ошибка проверки выпуска жетона" };
   }
 };
 
@@ -864,7 +865,7 @@ const checkJettonMinterNextAdmin = async (values: {
     return { value: jettonMinterInfo };
   } catch (e: any) {
     console.error(e);
-    return { error: "Jetton-minter check error" };
+    return { error: "Ошибка проверки выпуска жетона" };
   }
 };
 
@@ -889,7 +890,7 @@ const checkExistingOrderId = async (
     }
   } catch (e) {
     console.error(e);
-    return { error: "Possibly connectivity error" };
+    return { error: "Возможная ошибка подключения" };
   }
 };
 
@@ -1003,7 +1004,7 @@ const orderTypes: OrderType[] = [
         type: "Address",
       },
       newAdminAddress: {
-        name: "Новый кошелек администратора",
+        name: "Новый адрес администратора",
         type: "Address",
       },
     },
@@ -1036,7 +1037,7 @@ const orderTypes: OrderType[] = [
   },
 
   {
-    name: "Пополнить контракт жетона",
+    name: "Пополнить смарт-контракт жетона",
     fields: {
       jettonMinterAddress: {
         name: "Адрес контракта жетона",
@@ -1123,7 +1124,7 @@ const orderTypes: OrderType[] = [
         type: "Jetton",
       },
       fromAddress: {
-        name: "С адреса",
+        name: "Отправитель",
         type: "Address",
       },
       toAddress: {
@@ -1162,7 +1163,7 @@ const orderTypes: OrderType[] = [
         type: "Address",
       },
       newStatus: {
-        name: `Новое состояние (Разблокировать, исх., вход., полная блокировка)`,
+        name: `Новое состояние (Разблокировать, исх. запрещены, вход. запрещены, полная блокировка)`,
         type: "Status",
       },
     },
@@ -1304,7 +1305,7 @@ const setNewOrderMode = (mode: "fill" | "confirm") => {
 
 $("#newOrder_createButton").addEventListener("click", async () => {
   if (!myAddress) {
-    alert("Please connect wallet");
+    alert("Пожалуйста, подключите кошелек");
     return;
   }
 
@@ -1334,7 +1335,7 @@ $("#newOrder_createButton").addEventListener("click", async () => {
     $("#newOrder_orderId") as HTMLInputElement
   );
   if (orderId === null || orderId === undefined || orderId < 0) {
-    alert("Invalid Order ID");
+    alert("Неверный идентификатор заявки");
     return;
   }
 
@@ -1387,7 +1388,7 @@ $("#newOrder_createButton").addEventListener("click", async () => {
   );
 
   if (myProposerIndex === -1 && mySignerIndex === -1) {
-    alert("Error: you are not proposer and not signer");
+    alert("Ошибка:вы не предлагающий и не подтверждающий");
     setNewOrderMode("fill");
     return;
   }
@@ -1748,7 +1749,7 @@ $("#newMultisig_createButton").addEventListener("click", async () => {
   if (newMultisigMode === "update") {
     orderId = getBigIntFromInput(newMultisigOrderIdInput);
     if (orderId === null || orderId === undefined || orderId < 0) {
-      alert("Invalid order Id");
+      alert("Неверный идентификатор заказа");
       return;
     }
 
@@ -1767,19 +1768,19 @@ $("#newMultisig_createButton").addEventListener("click", async () => {
   for (let i = 0; i < newMultisigInfo.signersCount; i++) {
     const input = $(`#newMultisig_signer${i}`) as HTMLInputElement;
     if (input.value === "") {
-      alert(`Signer ${i}: empty field`);
+      alert(`Подтверждающий ${i}: пустое поле`);
       return;
     }
 
     const addressString = input.value;
     const error = validateUserFriendlyAddress(addressString, IS_TESTNET);
     if (error) {
-      alert(`Signer ${i}: ${error}`);
+      alert(`Подтверждающий ${i}: ${error}`);
       return;
     }
     const address = Address.parseFriendly(addressString).address;
     if (addressMap[address.toRawString()]) {
-      alert("Duplicate " + addressString);
+      alert("Задвоение " + addressString);
       return;
     }
     addressMap[address.toRawString()] = true;
@@ -1790,19 +1791,19 @@ $("#newMultisig_createButton").addEventListener("click", async () => {
   for (let i = 0; i < newMultisigInfo.proposersCount; i++) {
     const input = $(`#newMultisig_proposer${i}`) as HTMLInputElement;
     if (input.value === "") {
-      alert(`Proposer ${i}: empty field`);
+      alert(`Предлагающий ${i}: пустое поле`);
       return;
     }
 
     const addressString = input.value;
     const error = validateUserFriendlyAddress(addressString, IS_TESTNET);
     if (error) {
-      alert(`Proposer ${i}: ${error}`);
+      alert(`Предлагающий ${i}: ${error}`);
       return;
     }
     const address = Address.parseFriendly(addressString).address;
     if (addressMap[address.toRawString()]) {
-      alert("Duplicate " + addressString);
+      alert("Задвоение " + addressString);
       return;
     }
     addressMap[address.toRawString()] = true;
@@ -1855,7 +1856,7 @@ $("#newMultisig_createButton").addEventListener("click", async () => {
     );
 
     if (myProposerIndex === -1 && mySignerIndex === -1) {
-      alert("Error: you are not proposer and not signer");
+      alert("Ошибка: вы не являетесь предлагающим и подтверждающим.");
       return;
     }
 
@@ -1973,7 +1974,7 @@ const processUrl = async () => {
     console.log(multisigAddress, orderId);
 
     if (multisigAddress === undefined) {
-      alert("Invalid URL");
+      alert("Неправильный URL");
       showScreen("startScreen");
     } else {
       const newMultisigAddress = formatContractAddress(multisigAddress.address);
