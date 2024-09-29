@@ -49,7 +49,7 @@ export const sendToTonApi = async (
   params: any,
   isTestnet: boolean
 ) => {
-  const mainnetRpc = "https://tonapi.io/v2/";
+  const mainnetRpc = "https://dev.tonapi.io/v2/";
   const testnetRpc = "https://testnet.tonapi.io/v2/";
   const rpc = isTestnet ? testnetRpc : mainnetRpc;
 

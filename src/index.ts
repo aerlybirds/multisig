@@ -66,7 +66,7 @@ const pushUrlState = (multisigAddress: string, orderId?: bigint): void => {
     url += "/" + orderId;
   }
   if (window.history.state !== url) {
-    window.history.pushState(url, "Мультикошелек - " + url, "#" + url);
+    window.history.pushState(url, "Мультикошелек " + url, "#" + url);
   }
 };
 
@@ -764,7 +764,7 @@ const validateValue = (
       return parseAmount(value, 9);
 
     case "Jetton":
-      return parseAmount(value, 6);
+      return parseBigInt(value);
 
     case "Address":
       if (!Address.isFriendly(value)) {
@@ -1994,3 +1994,4 @@ const processUrl = async () => {
 processUrl();
 
 window.onpopstate = () => processUrl();
+ 

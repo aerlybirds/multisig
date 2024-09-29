@@ -76,10 +76,7 @@ export const checkMultisigOrder = async (
   const parsedData = parseOrderData(data);
 
   checkNumber(parsedData.threshold);
-  assert(
-    parsedData.threshold > 0,
-    "Число подтверждающих не больше нуляЧисло подтверждающих не больше нуля"
-  );
+  assert(parsedData.threshold > 0, "Число подтверждающих не больше нуля");
   assert(
     parsedData.threshold <= parsedData.signers.length,
     "Недопустимый порог"
@@ -310,9 +307,9 @@ export const checkMultisigOrder = async (
       );
       return `Принудительная отправка ${
         parsed.action.jettonAmount
-      } с кошелька пользователя ${fromAddress} на кошелек ${toAddress}; ${fromNano(
+      } с адреса пользователя ${fromAddress} на адрес ${toAddress}; ${fromNano(
         parsed.tonAmount
-      )} TON за оплату комиссии`;
+      )} TON для оплаты комиссии`;
     } catch (e) {}
 
     try {
@@ -326,7 +323,7 @@ export const checkMultisigOrder = async (
       );
       return `Принудительное сжигание ${
         parsed.action.jettonAmount
-      } жетонов с кошелька пользователя ${userAddress}; ${fromNano(
+      } жетонов с адреса пользователя ${userAddress}; ${fromNano(
         parsed.tonAmount
       )} TON для оплаты комиссии`;
     } catch (e) {}
